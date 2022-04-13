@@ -25,7 +25,7 @@ class Round():
         for c in range(4):
             for z in range(4):
                 if None in (t_guess[z], t_target[c]):
-                    pass
+                    continue
                 elif t_guess[z] == t_target[c]:
                     self.inaccurates += 1
                     t_guess[z] = None
@@ -53,17 +53,13 @@ class Round():
 # If this class definition is run by itself, some tests will be run.
 if __name__ == "__main__":
     test_round = Round((1,2,3,4), (1,2,4,3))
-    print(test_round.accurates)
-    print(test_round.inaccurates)
+    print(f"{test_round.accurates}, {test_round.inaccurates}")
     print()
     test_round = Round((1,2,3,4), (4,3,2,1))
-    print(test_round.accurates)
-    print(test_round.inaccurates)
+    print(f"{test_round.accurates}, {test_round.inaccurates}")
     print()
     test_round = Round((1,2,3,4), (1,2,3,4))
-    print(test_round.accurates)
-    print(test_round.inaccurates)
+    print(f"{test_round.accurates}, {test_round.inaccurates}")
     print()
     test_round = Round((1,2,3,4), (2,2,2,2))
-    print(test_round.accurates)
-    print(test_round.inaccurates)
+    print(f"{test_round.accurates}, {test_round.inaccurates}")
