@@ -1,24 +1,22 @@
-# Game class
+# Game class:
+# Manages the game.
 
-# Manages the game
+from Round import *
+from handydandies import *
 
 class Game():
 
     # Attributes: rounds, target
-    # Methods: getTarget, getRounds, getRoundCount, reset, nextRound, getLength
+    # Methods: getTarget, getRounds, getRoundCount, nextRound, getLength
 
     def __init__(self, target):
         self.target = target
         self.rounds = []
-        self.length = 0
+        print("Game created.")
     
+    @verbose_wrapper
     def nextRound(self, guess):
         self.rounds += [Round(guess, self.target)]
-        self.length += 1
-    
-    def reset(self, newTarget):
-        self.target = newTarget
-        self.rounds = []
     
     def getTarget(self):
         return self.target
@@ -27,4 +25,4 @@ class Game():
         return self.rounds
 
     def getLength(self):
-        return self.length
+        return len(self.rounds)

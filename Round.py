@@ -1,6 +1,7 @@
-# Round class
-
+# Round class:
 # Manages a single round.
+
+from handydandies import *
 
 class Round():
 
@@ -17,14 +18,14 @@ class Round():
         t_guess = list(guess)       # in case Tuple was given (is immutable and thus unsuitable)
         t_target = list(target)
 
-        for c in range(4):              # Catch the Accurates first, since these take priority. Don't want an Accurate denied because it was pre-emptively None'd!
+        for c in range(4):              # Catch all the Accurates first, since these take priority. Don't want an Accurate match denied because it was pre-emptively None'd!
             if t_guess[c] == t_target[c]:
                 self.accurates += 1
                 t_guess[c] = t_target[c] = None
         
         for c in range(4):
             for z in range(4):
-                if None in (t_guess[z], t_target[c]):
+                if None in (t_guess[z], t_target[c]) or c == z:
                     continue
                 elif t_guess[z] == t_target[c]:
                     self.inaccurates += 1
@@ -39,18 +40,12 @@ class Round():
 
     def getGuess(self):
         return self.guess
-
+    
+    @verbose_wrapper
     def getFeedback(self):
         return (self.accurates, self.inaccurates)
-        
-
-
-
-
-
-
-
-# If this class definition is run by itself, some tests will be run.
+   
+# If this class definition is run by itself, some test values will be run:
 if __name__ == "__main__":
     test_round = Round((1,2,3,4), (1,2,4,3))
     print(f"{test_round.accurates}, {test_round.inaccurates}")
