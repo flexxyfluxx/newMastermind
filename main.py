@@ -19,7 +19,7 @@ def makeTarget() -> list:
     return choices(range(6), k = 4)
 
 @verbose_wrapper
-def playGame() -> None:
+def playGame():
 
     print("Game started.")
 
@@ -69,7 +69,9 @@ def playGame() -> None:
     else:
         print("You utter disappointment. You disgust me.")
         print(f"""Ten entire rounds, and you can't even guess that the sequence was actually {current_game.getTarget()}? Pathetic!""")
-        
+
+
+
 
 if __name__ == "__main__":
     playGame()

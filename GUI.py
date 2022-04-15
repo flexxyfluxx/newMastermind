@@ -23,7 +23,8 @@ class MainWindow(Frame):
         self.master.geometry("720x720")
         self.master.resizable(width = 0, height = 0)
 
-        
+        self.selected = (None, None, None, None)
+
         self._create_widgets()
         self._place_widgets()
 
@@ -174,7 +175,7 @@ class MainWindow(Frame):
                         height = 2,
                         width = 5,
                         bd = 8,
-                        command = None
+                        command = lambda: self.colorselect_pressed(c, z)
                     )
                 ]
         
@@ -192,7 +193,8 @@ class MainWindow(Frame):
             height = 1,
             width = 10,
             text = "SUBMIT",
-            font = ("Helvetica", 12, "bold")
+            font = ("Helvetica", 12, "bold"),
+            command = lambda: self.submit_pressed()
         )
 
         self.credits = Label(
@@ -344,15 +346,15 @@ class MainWindow(Frame):
     def reveal_target(self):
         for c in range(4):
             self.hiddentarget_labels[c].grid_remove()
-        
     
-    def submit(self):
+    def get_selected(self):
+        return self.selected
+    
+    def colorselect_pressed(self: Event, cid, place):
         pass
 
-    def add_guess(self, guess, feedback):
+    def submit_pressed(self):
         pass
-        
-
 
 # some tests lol
 if __name__ == "__main__":
