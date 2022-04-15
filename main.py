@@ -2,6 +2,7 @@
 from Game import *
 from random import choices
 from handydandies import *
+from GUI import *
 
 COLORS = (
     "000000",   # White
@@ -10,7 +11,7 @@ COLORS = (
     "00ff00",   # Green
     "0000ff",   # Blue
     "ffdd00"    # Yellow (slightly more "banana"-y for better visibility)
-    )
+)
 
 @verbose_wrapper
 def makeTarget() -> list:
@@ -44,30 +45,30 @@ def playGame() -> None:
         inaccurates = current_round.getFeedback()[1]
         print(f"Accurates: {accurates};\nInaccurates: {inaccurates}")
 
-        if current_round.checkVictory:
+        if current_round.checkVictory():
             won = True
 
-    game_final_length = current_game.getLength
+    game_final_length = current_game.getLength()
 
     if won:
         print("Congrations, you guessed the sequence :D")
         
-        if current_game.getLength >= 9:
+        if game_final_length >= 9:
             print(f"""Just in the nick of time, too!\
                 You took a whole {game_final_length} rounds!""")
         
-        elif current_game.getLength <= 3:
-            print(f"""And with time to spare!\
-                You only took an astonishing {game_final_length} rounds!""")
+        elif game_final_length == 1:
+            print("You must've gotten lucky! You got it first-try!")
+
+        elif game_final_length <= 3:
+            print(f"""And with time to spare! You only took an astonishing {game_final_length} rounds!""")
 
         else:
-            print(f"""You accomplished this feat\
-                in some {game_final_length} rounds.""")
+            print(f"""You accomplished this feat in some {game_final_length} rounds.""")
     
     else:
         print("You utter disappointment. You disgust me.")
-        print(f"""Ten entire rounds, and you can't even guess that\
-        the sequence was actually {current_game.getTarget()}? Pathetic!""")
+        print(f"""Ten entire rounds, and you can't even guess that the sequence was actually {current_game.getTarget()}? Pathetic!""")
         
 
 if __name__ == "__main__":
