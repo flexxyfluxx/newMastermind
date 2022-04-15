@@ -18,7 +18,7 @@ def makeTarget() -> list:
     return choices(range(6), k = 4)
 
 @verbose_wrapper
-def playGame():
+def playGame() -> None:
 
     print("Game started.")
 
