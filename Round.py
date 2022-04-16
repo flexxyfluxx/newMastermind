@@ -8,7 +8,8 @@ class Round():
     # Attributes: guess, accurates, inaccurates
     # Methods: checkVictory, getGuess, getFeedback
 
-    def __init__(self, guess, target):
+    def __init__(self, guess, target, rid):
+        self.round_id = rid
         self.guess = guess
         
         
@@ -40,10 +41,12 @@ class Round():
 
     def getGuess(self):
         return self.guess
-    
-    @verbose_wrapper
+
     def getFeedback(self):
         return (self.accurates, self.inaccurates)
+
+    def getID(self):
+        return self.round_id
    
 # If this class definition is run by itself, some test values will be run:
 if __name__ == "__main__":

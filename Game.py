@@ -16,7 +16,7 @@ class Game():
     
     @verbose_wrapper
     def nextRound(self, guess):
-        self.rounds += [Round(guess, self.target)]
+        self.rounds += [Round(guess, self.target, len(self.rounds))]
     
     def getTarget(self):
         return self.target

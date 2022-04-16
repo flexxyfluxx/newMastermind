@@ -14,12 +14,12 @@ COLORS = (
 )
 
 @verbose_wrapper
-def makeTarget() -> list:
+def makeTarget():
 
     return choices(range(6), k = 4)
 
 @verbose_wrapper
-def playGame():
+def play_in_console():
 
     print("Game started.")
 
@@ -54,24 +54,51 @@ def playGame():
         print("Congrations, you guessed the sequence :D")
         
         if game_final_length >= 9:
-            print(f"""Just in the nick of time, too!\
-                You took a whole {game_final_length} rounds!""")
+            print(f"Just in the nick of time, too! You took a whole {game_final_length} rounds!")
         
         elif game_final_length == 1:
             print("You must've gotten lucky! You got it first-try!")
 
         elif game_final_length <= 3:
-            print(f"""And with time to spare! You only took an astonishing {game_final_length} rounds!""")
+            print(f"And with time to spare! You only took an astonishing {game_final_length} rounds!")
 
         else:
-            print(f"""You accomplished this feat in some {game_final_length} rounds.""")
+            print(f"You accomplished this feat in some {game_final_length} rounds.")
     
     else:
         print("You utter disappointment. You disgust me.")
-        print(f"""Ten entire rounds, and you can't even guess that the sequence was actually {current_game.getTarget()}? Pathetic!""")
+        print(f"Ten entire rounds, and you can't even guess that the sequence was actually {current_game.getTarget()}? Pathetic!")
+
+def submit_guess(game, window, guess):
+    if None in guess:
+        return
+    
+    game.nextRound(guess)
+    window.push_round(game.getRounds()[-1])
+
+    if game.getRounds()[-1].checkVictory():
+        window.do_victory_things()
+        window.quit()
+    elif game.getLength() >= 10:
+        window.do_defeat_things()
+        window.quit()
 
 
+def submit_color(window, clid, new):
+    if new is None:
+        return
+    
+    window.set_guess_cell(clid, new)
 
 
 if __name__ == "__main__":
-    playGame()
+    window = MainWindow()
+    game = Game(makeTarget())
+
+    window.colorselect_pressed = lambda: submit_color(window=window, clid=None, new=None)
+    window.submit_pressed = lambda: submit_guess(game, window, window.get_selected())
+
+    window.master.title("MASTERmind")
+    window.mainloop()
+
+    #play_in_console()

@@ -3,6 +3,8 @@
 # Based on TKInter.
 
 from tkinter import *
+from Round import *
+from Game import *
 
 COLORS = (
     "#000000",   # Black
@@ -14,6 +16,7 @@ COLORS = (
 )
 DEFAULTCOLOR = "#444444"
 
+
 class MainWindow(Frame):
 
     def __init__(self, master = None):
@@ -23,10 +26,19 @@ class MainWindow(Frame):
         self.master.geometry("720x720")
         self.master.resizable(width = 0, height = 0)
 
-        self.selected = (None, None, None, None)
+        self._selected_data = [None, None, None, None]
+
+        # make button functions
+        self._btn_funcs = [ [], [], [], [] ]
+        for c in range(4):
+            for z in range(6):
+                self._btn_funcs[c] += [self._make_button_func(c, z)]
 
         self._create_widgets()
         self._place_widgets()
+    
+    def _make_button_func(self, c, z):
+        return lambda *args, **kwargs: self.colorselect_pressed(clid = c, new = z)
 
 
     def _create_left(self):
@@ -139,6 +151,8 @@ class MainWindow(Frame):
         self.staged_guess_cells = []
         self.staged_guess_colors = []
         for c in range(4):
+
+            
             self.staged_guess_cells += [
                 Frame(
                     self.right_side,
@@ -147,10 +161,11 @@ class MainWindow(Frame):
                     relief = RIDGE,
                 )
             ]
+            
             self.staged_guess_colors += [
                 Frame(
                     self.right_side,
-                    bg = "#444444"
+                    bg = DEFAULTCOLOR
                 )
             ]
         
@@ -165,6 +180,8 @@ class MainWindow(Frame):
                     command = None
                 )
             ]
+        
+
         self.color_buttons = [ [],[],[],[] ]
         for c in range(4):
             for z in range(6):
@@ -175,7 +192,7 @@ class MainWindow(Frame):
                         height = 2,
                         width = 5,
                         bd = 8,
-                        command = lambda: self.colorselect_pressed(c, z)
+                        command = self._btn_funcs[c][z]
                     )
                 ]
         
@@ -323,8 +340,10 @@ class MainWindow(Frame):
         self.submit_button.grid(in_ = self.submit_button_frame, row = 0, column = 0)
 
         self.credits.grid(row = 7, column = 2, columnspan = 2, sticky = SE, pady = 16, padx = 24)
+        #self.credits.pack()
 
-        self.logo .grid(row = 8, column = 0, columnspan = 4, sticky = NSEW)
+        self.logo.grid(row = 8, column = 0, columnspan = 4, sticky = NSEW)
+        #self.logo.pack()
         
 
     def _create_widgets(self):
@@ -348,16 +367,79 @@ class MainWindow(Frame):
             self.hiddentarget_labels[c].grid_remove()
     
     def get_selected(self):
-        return self.selected
+        return self._selected_data
     
-    def colorselect_pressed(self: Event, cid, place):
+    def colorselect_pressed(self, *args, **kwargs):
         pass
 
     def submit_pressed(self):
         pass
 
+    def set_guess_cell(self, clid = None, new = None):
+        if new in range(6) or new is None:
+            self.staged_guess_colors[clid]['bg'] = DEFAULTCOLOR if new is None else COLORS[new]
+            self._selected_data[clid] = new
+        else:
+            raise ValueError("Invalid color ID given!")
+    
+    def push_round(self, round):
+        for c in range(4):
+            self.history_colors[round.getID()]['bg'] = DEFAULTCOLOR if (x := round.getGuess()[c]) is None else COLORS[x]
+        self.history_feedback_labels[round.getID()][0]['text'] = round.getFeedback()[0]
+        self.history_feedback_labels[round.getID()][1]['text'] = round.getFeedback()[1]
+    
+    def do_victory_things(self, game_final_length):
+        victory_msg_window = Toplevel(
+            width = 256,
+            height = 256
+        )
+        victory_label1 = Label(
+            victory_msg_window,
+            text = "Congrations, you guessed the sequence :D"
+        )
+        if game_final_length >= 9:
+            celebration_str = f"Just in the nick of time, too! You took a whole {game_final_length} rounds!"
+        
+        elif game_final_length == 1:
+            celebration_str = "You must've gotten lucky! You got it first-try!"
+
+        elif game_final_length <= 3:
+            celebration_str = f"And with time to spare! You only took an astonishing {game_final_length} rounds!"
+
+        else:
+            celebration_str = f"You accomplished this feat in some {game_final_length} rounds."
+        
+        victory_label2 = Label(
+            victory_msg_window,
+            text = celebration_str
+        )
+        victory_msg_window.resizable(width = 0, height = 0)
+        victory_label1.pack()
+        victory_label2.pack()
+        victory_msg_window.mainloop()
+    
+    def do_defeat_things(self, target):
+        defeat_msg_window = Toplevel(
+            width = 256,
+            height = 256
+        )
+        defeat_label1 = Label(
+            defeat_msg_window,
+            text = "You utter disappointment. You disgust me."
+        )
+        defeat_label1 = Label(
+            defeat_msg_window,
+            text = f"Ten entire rounds, and you can't even guess that the sequence was actually {target}? Pathetic!"
+        )
+        defeat_msg_window.resizable(width = 0, height = 0)
+        defeat_label1.pack()
+        defeat_label2.pack()
+        defeat_msg_window("Defeat!")
+        defeat_msg_window.mainloop()
+
+
 # some tests lol
 if __name__ == "__main__":
     window = MainWindow()
     window.master.title("Did someone say sus 😱😱😱 HOLY FUCKING SHIT‼️‼️‼️‼️ IS THAT A MOTHERFUCKING AMONG US REFERENCE??????!!!!!!!!!!11!1!1!1!1!1!1! 😱😱😱😱😱😱😱 AMONG US IS THE BEST FUCKING GAME 🔥🔥🔥🔥💯💯💯💯 RED IS SO SUSSSSS 🕵️🕵️🕵️🕵️🕵️🕵️🕵️🟥🟥🟥🟥🟥 COME TO MEDBAY AND WATCH ME SCAN 🏥🏥🏥🏥🏥🏥🏥🏥 🏥🏥🏥🏥 WHY IS NO ONE FIXING O2 🤬😡🤬😡🤬😡🤬🤬😡🤬🤬😡 OH YOUR CREWMATE? NAME EVERY TASK 🔫😠🔫😠🔫😠🔫😠🔫😠 Where Any sus!❓ ❓ Where!❓ ❓ Where! Any sus!❓ Where! ❓ Any sus!❓ ❓ Any sus! ❓ ❓ ❓ ❓ Where!Where!Where! Any sus!Where!Any sus Where!❓ Where! ❓ Where!Any sus❓ ❓ Any sus! ❓ ❓ ❓ ❓ ❓ ❓ Where! ❓ Where! ❓ Any sus!❓ ❓ ❓ ❓ Any sus! ❓ ❓ Where!❓ Any sus! ❓ ❓ Where!❓ ❓ Where! ❓ Where!Where! ❓ ❓ ❓ ❓ ❓ ❓ ❓ Any sus!❓ ❓ ❓ Any sus!❓ ❓ ❓ ❓ Where! ❓ Where! Where!Any sus!Where! Where! ❓ ❓ ❓ ❓ ❓ ❓ I think it was purple!👀👀👀👀👀👀👀👀👀👀It wasnt me I was in vents!!!!!!!!!!!!!!😂🤣😂🤣😂🤣😂😂😂🤣🤣🤣😂😂😂 r/amongusmemes r/unexpectedamongus r/expectedamongus perfectly balanced as all things should be r/unexpectedthanos r/expectedthanos for balance")
-    window.mainloop()                             
+    window.mainloop()
