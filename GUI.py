@@ -448,7 +448,6 @@ class MainWindow(Frame):
         )
         defeat_msg_window.resizable(width = 0, height = 0)
         defeat_label1.pack()
-        defeat_label2.pack()
         self._nuke_buttons()
         defeat_msg_window("Defeat!")
 
