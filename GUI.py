@@ -33,12 +33,15 @@ class MainWindow(Frame):
         for c in range(4):
             for z in range(6):
                 self._btn_funcs[c] += [self._make_button_func(c, z)]
+        
+        self.colorselect_pressed = None
+        self.submit_pressed = None
 
         self._create_widgets()
         self._place_widgets()
     
     def _make_button_func(self, c, z):
-        return lambda *args, **kwargs: self.colorselect_pressed(clid = c, new = z)
+        return lambda: self.colorselect_pressed(clid = c, new = z)
 
 
     def _create_left(self):
@@ -369,11 +372,11 @@ class MainWindow(Frame):
     def get_selected(self):
         return self._selected_data
     
-    def colorselect_pressed(self, *args, **kwargs):
-        pass
+    #def colorselect_pressed(self, clid, new):
+    #    pass
 
-    def submit_pressed(self):
-        pass
+    #def submit_pressed(self):
+    #    pass
 
     def set_guess_cell(self, clid = None, new = None):
         if new in range(6) or new is None:
