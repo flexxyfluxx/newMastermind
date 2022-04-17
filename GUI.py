@@ -34,6 +34,7 @@ class MainWindow(Frame):
 
         self._create_widgets()
         self._place_widgets()
+        print("Game window created.")
     
     """
     def _make_button_func(self, c, z):
