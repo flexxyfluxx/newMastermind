@@ -4,14 +4,6 @@ from random import choices
 from handydandies import *
 from GUI import *
 
-COLORS = (
-    "000000",   # White
-    "ffffff",   # Black
-    "ff0000",   # Red
-    "00ff00",   # Green
-    "0000ff",   # Blue
-    "ffdd00"    # Yellow (slightly more "banana"-y for better visibility)
-)
 
 @verbose_wrapper
 def makeTarget():
@@ -76,12 +68,14 @@ def submit_guess(game, window, guess):
     game.nextRound(guess)
     window.push_round(game.getRounds()[-1])
 
+    # reset guess cells for next input
+    for c in range(4):
+        window.set_guess_cell(c, None)
+
     if game.getRounds()[-1].checkVictory():
-        window.do_victory_things()
-        window.quit()
+        window.do_victory_things(game.getLength())
     elif game.getLength() >= 10:
-        window.do_defeat_things()
-        window.quit()
+        window.do_defeat_things(game.getTarget())
 
 
 def submit_color(window, clid, new):
@@ -91,11 +85,30 @@ def submit_color(window, clid, new):
     window.set_guess_cell(clid, new)
 
 
+def wire_up_the_fucking_buttons(window):
+    func_array = [ [],[],[],[] ]
+    for c in range(4):
+        for z in range(6):
+            func_array[c] += [lambda c=c, z=z: window.set_guess_cell(c, z)]
+    
+    for c in range(4):
+        for z in range(6):
+            window.color_buttons[c][z]['command'] = func_array[c][z]
+
+def push_target(target, window):
+    for c in range(4):
+        window.hiddentarget_colors[c]['bg'] = COLORS[target[c]]
+
+
 if __name__ == "__main__":
     window = MainWindow()
     game = Game(makeTarget())
 
-    window.colorselect_pressed = lambda: submit_color(window=window, clid=None, new=None)
+    push_target(game.getTarget(), window)
+
+    wire_up_the_fucking_buttons(window)
+
+    #window.colorselect_pressed = lambda: submit_color(window=window, clid=None, new=None)
     window.submit_pressed = lambda: submit_guess(game, window, window.get_selected())
 
     window.master.title("MASTERmind")

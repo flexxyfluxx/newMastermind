@@ -5,16 +5,9 @@
 from tkinter import *
 from Round import *
 from Game import *
+from handydandies import *
 
-COLORS = (
-    "#000000",   # Black
-    "#ffffff",   # White
-    "#ff0000",   # Red
-    "#00ff00",   # Green
-    "#0000ff",   # Blue
-    "#ffdd00"    # Yellow (slightly more "banana"-y for better visibility)
-)
-DEFAULTCOLOR = "#444444"
+
 
 
 class MainWindow(Frame):
@@ -29,19 +22,23 @@ class MainWindow(Frame):
         self._selected_data = [None, None, None, None]
 
         # make button functions
+        """
         self._btn_funcs = [ [], [], [], [] ]
         for c in range(4):
             for z in range(6):
                 self._btn_funcs[c] += [self._make_button_func(c, z)]
-        
-        self.colorselect_pressed = None
-        self.submit_pressed = None
+        """
+
+        #self.colorselect_pressed = None
+        #self.submit_pressed = None
 
         self._create_widgets()
         self._place_widgets()
     
+    """
     def _make_button_func(self, c, z):
         return lambda: self.colorselect_pressed(clid = c, new = z)
+    """
 
 
     def _create_left(self):
@@ -195,7 +192,7 @@ class MainWindow(Frame):
                         height = 2,
                         width = 5,
                         bd = 8,
-                        command = self._btn_funcs[c][z]
+                        command = None
                     )
                 ]
         
@@ -378,7 +375,7 @@ class MainWindow(Frame):
     #def submit_pressed(self):
     #    pass
 
-    def set_guess_cell(self, clid = None, new = None):
+    def set_guess_cell(self, clid, new):
         if new in range(6) or new is None:
             self.staged_guess_colors[clid]['bg'] = DEFAULTCOLOR if new is None else COLORS[new]
             self._selected_data[clid] = new
@@ -387,11 +384,12 @@ class MainWindow(Frame):
     
     def push_round(self, round):
         for c in range(4):
-            self.history_colors[round.getID()]['bg'] = DEFAULTCOLOR if (x := round.getGuess()[c]) is None else COLORS[x]
+            self.history_colors[round.getID()][c]['bg'] = DEFAULTCOLOR if (x := round.getGuess()[c]) is None else COLORS[x]
         self.history_feedback_labels[round.getID()][0]['text'] = round.getFeedback()[0]
         self.history_feedback_labels[round.getID()][1]['text'] = round.getFeedback()[1]
-    
+
     def do_victory_things(self, game_final_length):
+        self.reveal_target()
         victory_msg_window = Toplevel(
             width = 256,
             height = 256
@@ -419,9 +417,11 @@ class MainWindow(Frame):
         victory_msg_window.resizable(width = 0, height = 0)
         victory_label1.pack()
         victory_label2.pack()
+        self._nuke_buttons()
         victory_msg_window.mainloop()
     
     def do_defeat_things(self, target):
+        self.reveal_target()
         defeat_msg_window = Toplevel(
             width = 256,
             height = 256
@@ -432,13 +432,24 @@ class MainWindow(Frame):
         )
         defeat_label1 = Label(
             defeat_msg_window,
-            text = f"Ten entire rounds, and you can't even guess that the sequence was actually {target}? Pathetic!"
+            text = f"Ten entire rounds, and you can't even guess that the sequence was actually {target_to_words(target)}? Pathetic!"
         )
         defeat_msg_window.resizable(width = 0, height = 0)
         defeat_label1.pack()
         defeat_label2.pack()
+        self._nuke_buttons()
         defeat_msg_window("Defeat!")
+
+
         defeat_msg_window.mainloop()
+    
+    def _nuke_buttons(self):
+        for c in range(4):
+            for z in range(6):
+                self.color_buttons[c][z].config(state = DISABLED)
+        self.submit_button.config(state = DISABLED)
+        
+
 
 
 # some tests lol
