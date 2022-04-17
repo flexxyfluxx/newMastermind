@@ -119,7 +119,7 @@ class MainWindow(Frame):
             self.history_feedback_labels[c] += [
                 Label(
                     self.history,
-                    text = "!",
+                    text = "",
                     font = ("Helvetica", 28),
                     fg = "#00ff00",
                     bg = "#555555",
@@ -128,7 +128,7 @@ class MainWindow(Frame):
                 ),
                 Label(
                     self.history,
-                    text = "!",
+                    text = "",
                     font = ("Helvetica", 28),
                     fg = "#ff0000",
                     bg = "#555555",
@@ -213,6 +213,13 @@ class MainWindow(Frame):
             text = "SUBMIT",
             font = ("Helvetica", 12, "bold"),
             command = lambda: self.submit_pressed()
+        )
+
+        self.credits_frame = Frame(
+            self.right_side,
+            bg = "#000000",
+            bd = 8,
+            relief = SUNKEN
         )
 
         self.credits = Label(
@@ -340,7 +347,11 @@ class MainWindow(Frame):
 
         self.submit_button.grid(in_ = self.submit_button_frame, row = 0, column = 0)
 
-        self.credits.grid(row = 7, column = 2, columnspan = 2, sticky = SE, pady = 16, padx = 24)
+        self.credits_frame.grid(row = 7, column = 2, columnspan = 2, sticky = NSEW,)
+        self.credits_frame.rowconfigure(0, weight = 1)
+        self.credits_frame.columnconfigure(0, weight = 1)
+        self.credits_frame.grid_propagate(0)
+        self.credits.grid(in_ = self.credits_frame, row = 0, column = 0, sticky = NSEW)
         #self.credits.pack()
 
         self.logo.grid(row = 8, column = 0, columnspan = 4, sticky = NSEW)
