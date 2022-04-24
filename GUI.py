@@ -6,7 +6,7 @@ from tkinter import *
 from Round import *
 from Game import *
 from handydandies import *
-
+from time import sleep
 
 
 
@@ -430,6 +430,7 @@ class MainWindow(Frame):
         victory_label1.pack()
         victory_label2.pack()
         self._nuke_buttons()
+        
         victory_msg_window.mainloop()
     
     def do_defeat_things(self, target):
@@ -449,8 +450,8 @@ class MainWindow(Frame):
         defeat_msg_window.resizable(width = 0, height = 0)
         defeat_label1.pack()
         self._nuke_buttons()
-        defeat_msg_window("Defeat!")
 
+        #defeat_msg_window("Defeat!") # ah yes, the good ol' non-function call
 
         defeat_msg_window.mainloop()
     
