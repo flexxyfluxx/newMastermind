@@ -7,5 +7,7 @@ I tried to implement a version of the popular code breaking game MASTERMIND befo
 However, now I know shit (or more shit, anyways), so I decided to revamp my old MASTERMIND with my newfound knowledge of objects, classes, events and UIs.
 
 Requires Python 3.9+
+
 3.8 might work, but is untested.
+
 Anything earlier doesn't work due to assignment expressions.
